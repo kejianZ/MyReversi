@@ -5,11 +5,11 @@ namespace logic
 {
     public interface ISubject
     {
-        void AttachObserver(IObesever observer);
+        void AttachObserver(IObserver observer);
         void AnnounceObservers();
     }
 
-    public interface IObesever
+    public interface IObserver
     {
         void update(ISubject subject);
     }
