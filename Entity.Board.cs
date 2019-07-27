@@ -19,12 +19,12 @@ namespace logic
                     int pos = x * 8 + y;
                     if (pos == 27 || pos == 36)
                     {
-                        board.Add(new Cell(x, y, 1));
+                        board.Add(new Cell(x, y, 1, 2));
                         textDisplay.Add('B');
                     }
                     else if (pos == 28 || pos == 35)
                     {
-                        board.Add(new Cell(x, y, 2));
+                        board.Add(new Cell(x, y, 2, 2));
                         textDisplay.Add('W');
                     }
                     else
@@ -81,8 +81,8 @@ namespace logic
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if(board[x*8 + y].color == Color.black) Console.Write("B ");
-                    else if(board[x*8 + y].color == Color.white) Console.Write("W ");
+                    if (board[x * 8 + y].color == Color.black) Console.Write("B ");
+                    else if (board[x * 8 + y].color == Color.white) Console.Write("W ");
                     else Console.Write("O ");
                 }
                 Console.WriteLine();

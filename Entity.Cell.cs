@@ -103,7 +103,7 @@ namespace logic
                         ReleatedDir dir = CalDir(subject);
                         if (dir == subject.direction)
                         {
-                            if (checkingcolor == color)
+                            if (subject.checkingcolor == color)
                             {
                                 direction = ReverseDir(subject.direction);
                                 status = CellStatus.needflip;
@@ -127,6 +127,7 @@ namespace logic
                             if(status == CellStatus.newplaced) return;
                             direction = dir;
                             color = (Color)(3 - (int)color);
+                            status = CellStatus.needflip;
                             AnnounceObservers();
                         }
                     }
@@ -139,17 +140,17 @@ namespace logic
             if(x == cell.x - 1) 
             {
                 if(y == cell.y - 1) return ReleatedDir.nw;
-                else if(y == cell.y) return ReleatedDir.w;
-                else return ReleatedDir.sw;
+                else if(y == cell.y) return ReleatedDir.n;
+                else return ReleatedDir.ne;
             }
             else if (x == cell.x + 1)
             {
-                if(y == cell.y - 1) return ReleatedDir.ne;
-                else if(y == cell.y) return ReleatedDir.e;
+                if(y == cell.y - 1) return ReleatedDir.sw;
+                else if(y == cell.y) return ReleatedDir.s;
                 else return ReleatedDir.se;
             }
-            else if (y == cell.y - 1) return ReleatedDir.n;
-            else return ReleatedDir.s;
+            else if (y == cell.y - 1) return ReleatedDir.w;
+            else return ReleatedDir.e;
         }
 
         ReleatedDir ReverseDir(ReleatedDir dir) => (ReleatedDir)(7-(int)dir);
