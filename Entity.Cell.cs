@@ -14,10 +14,11 @@ namespace logic
     {
         newplaced = 0,
         empty = 1,
-        occupied = 2
+        checking = 2,
+        needflip = 3
     }
 
-    internal enum PDirection : int
+    internal enum ReleatedDir : int
     {
         nw = 0,
         n = 1,
@@ -34,13 +35,17 @@ namespace logic
         int x;
         int y;
         internal Color color {get; set;}
-        Chessplaced info;
+        CellStatus status;
+        ReleatedDir direction;
+        Color checkingcolor;
         List<IObserver<Cell>> observers;
 
-        public Cell(int x, int y, int color = 0, int status = 1)
+        public Cell(int x, int y, Color color = 0, int status = 1)
         {
             this.x = x;
             this.y = y;
+            this.color = color;
+            this.status = (CellStatus)status;
         }
 
         public void AttachObserver(IObserver<Cell> observer) => observers.Add(observer);
@@ -55,13 +60,79 @@ namespace logic
 
         public void Update(Cell subject)
         {
-            throw new NotImplementedException();
+            if (status == CellStatus.empty)
+            {
+                return;
+            }
+            
+            switch(subject.status)
+            {
+                case CellStatus.newplaced:
+                    {
+                        if (color != subject.color)
+                        {
+                            checkingcolor = subject.color;
+                            direction = CalDir(subject);
+                            status = CellStatus.checking;
+                            AnnounceObservers();
+                        }
+                    }
+                    break;
+
+                case CellStatus.checking:
+                    {
+                        ReleatedDir dir = CalDir(subject);
+                        if (dir == subject.direction)
+                        {
+                            if (checkingcolor == color)
+                            {
+                                direction = ReverseDir(subject.direction);
+                                status = CellStatus.needflip;
+                            }
+                            else
+                            {
+                                direction = dir;
+                                checkingcolor = subject.checkingcolor;
+                                status = CellStatus.checking;
+                            }
+                            AnnounceObservers();
+                        }
+                    }
+                    break;
+
+                case CellStatus.needflip:
+                    {
+                        ReleatedDir dir = CalDir(subject);
+                        if (dir == subject.direction)
+                        {
+                            if(status == CellStatus.newplaced) return;
+                            direction = dir;
+                            color = (Color)(3 - (int)color);
+                            AnnounceObservers();
+                        }
+                    }
+                    break;
+            }
         }
 
-        struct Chessplaced
+        ReleatedDir CalDir(Cell cell)
         {
-            CellStatus status;
-            PDirection dir;
+            if(x == cell.x - 1) 
+            {
+                if(y == cell.y - 1) return ReleatedDir.nw;
+                else if(y == cell.y) return ReleatedDir.w;
+                else return ReleatedDir.sw;
+            }
+            else if (x == cell.x + 1)
+            {
+                if(y == cell.y - 1) return ReleatedDir.ne;
+                else if(y == cell.y) return ReleatedDir.e;
+                else return ReleatedDir.se;
+            }
+            else if (y == cell.y - 1) return ReleatedDir.n;
+            else return ReleatedDir.s;
         }
+
+        ReleatedDir ReverseDir(ReleatedDir dir) => (ReleatedDir)(7-(int)dir);
     }
 }
