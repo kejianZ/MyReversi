@@ -32,20 +32,39 @@ namespace logic
 
     internal class Cell: ISubject<Cell>, IObserver<Cell>
     {
-        int x;
-        int y;
-        internal Color color {get; set;}
+        public int x {get;}
+        public int y {get;}
+        public Color color;
         CellStatus status;
         ReleatedDir direction;
         Color checkingcolor;
-        List<IObserver<Cell>> observers;
+        List<IObserver<Cell>> observers = new List<IObserver<Cell>>();
 
-        public Cell(int x, int y, Color color = 0, int status = 1)
+        public Cell(int x, int y, int color = 0, int status = 1)
         {
             this.x = x;
             this.y = y;
-            this.color = color;
+            this.color = (Color)color;
             this.status = (CellStatus)status;
+        }
+
+        public bool TextDisplayHelper(out int color)
+        {
+            color = -1;
+            if (status == CellStatus.needflip || status == CellStatus.newplaced) 
+            {
+                color = (this.color == Color.white)? 0:1;
+                return true;
+            }
+            return false;
+        }
+
+        public void PlaceChess(int pcolor) 
+        {
+            color = (Color)pcolor;
+            status = CellStatus.newplaced;
+            checkingcolor = color;
+            AnnounceObservers();
         }
 
         public void AttachObserver(IObserver<Cell> observer) => observers.Add(observer);
