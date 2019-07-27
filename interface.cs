@@ -3,14 +3,22 @@ using System.Collections.Generic;
 
 namespace logic
 {
-    public interface ISubject
+    /// <summary>
+    /// Subject interface
+    /// </summary>
+    /// <typeparam name="T"> T states the ISubject's type</typeparam>
+    public interface ISubject<T>
     {
-        void AttachObserver(IObserver observer);
+        void AttachObserver(IObserver<T> observer);
         void AnnounceObservers();
     }
 
-    public interface IObserver
+    /// <summary>
+    /// Observer interface
+    /// </summary>
+    /// <typeparam name="T"> T states the type of Subject it's subscribing</typeparam>
+    public interface IObserver<T>
     {
-        void update(ISubject subject);
+        void Update(T subject);
     }
 }

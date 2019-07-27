@@ -16,10 +16,10 @@ namespace logic
                     board.Add(new Cell(x, y));
                 }
             }
-            board[27].color = status.black;
-            board[28].color = status.white;
-            board[35].color = status.white;
-            board[36].color = status.black;
+            board[27].color = Color.black;
+            board[28].color = Color.white;
+            board[35].color = Color.white;
+            board[36].color = Color.black;
         }
 
         public void DisplayBoard() 
@@ -28,16 +28,16 @@ namespace logic
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    status color = board[x*8 + y].color;
+                    Color color = board[x*8 + y].color;
                     switch (color) 
                     {
-                        case status.empty:
+                        case Color.empty:
                             Console.Write("O ");
                             break;
-                        case status.black:
+                        case Color.black:
                             Console.Write("B ");
                             break;
-                        case status.white:
+                        case Color.white:
                             Console.Write("W ");
                             break;
                     }
