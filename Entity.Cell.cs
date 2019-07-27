@@ -10,7 +10,7 @@ namespace logic
         white = 2
     };
 
-    internal class Cell: Subject
+    internal class Cell: Subject, IObserver
     {
         int x;
         int y;
@@ -20,6 +20,11 @@ namespace logic
         {
             this.x = x;
             this.y = y;
-        }        
+        }
+
+        public void update(ISubject subject)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
