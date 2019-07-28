@@ -34,10 +34,10 @@ namespace logic
                     }
                 }
             }
-            initObservers();
+            InitObservers();
         }
 
-        public void initObservers()
+        public void InitObservers()
         {
             foreach (Cell cell in board)
             {
@@ -59,7 +59,7 @@ namespace logic
             }
         }
 
-        public void PlaceChess(int x, int y, int color) => board[x * 8 + y].PlaceChess(color);
+        public bool PlaceChess(int x, int y, int color) => board[x * 8 + y].PlaceChess(color);
 
         public void DisplayBoard()
         {

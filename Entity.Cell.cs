@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace logic
@@ -15,7 +14,8 @@ namespace logic
         newplaced = 0,
         empty = 1,
         checking = 2,
-        needflip = 3
+        needflip = 3,
+        placeable = 4
     }
 
     internal enum ReleatedDir : int
@@ -59,12 +59,20 @@ namespace logic
             return false;
         }
 
-        public void PlaceChess(int pcolor) 
+        public bool PlaceChess(int pcolor) 
         {
+            if(status != CellStatus.empty) return false;
             color = (Color)pcolor;
             status = CellStatus.newplaced;
             checkingcolor = color;
             AnnounceObservers();
+            if(status == CellStatus.newplaced) 
+            {
+                color = Color.empty;
+                status = CellStatus.empty;
+                return false;
+            }
+            return true;
         }
 
         public void AttachObserver(IObserver<Cell> observer) => observers.Add(observer);
@@ -86,6 +94,7 @@ namespace logic
             
             switch(subject.status)
             {
+                case CellStatus.placeable:
                 case CellStatus.newplaced:
                     {
                         if (color != subject.color)
@@ -124,7 +133,12 @@ namespace logic
                         ReleatedDir dir = CalDir(subject);
                         if (dir == subject.direction)
                         {
-                            if(status == CellStatus.newplaced) return;
+                            if(status == CellStatus.placeable) return;
+                            if(status == CellStatus.newplaced)
+                            {
+                                status = CellStatus.placeable;
+                                return;
+                            }
                             direction = dir;
                             color = (Color)(3 - (int)color);
                             status = CellStatus.needflip;
